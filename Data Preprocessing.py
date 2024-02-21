@@ -78,8 +78,6 @@ cmdb_app = cmdb_app.withColumn("Owning_Business", split(col("Owning_Business"), 
 cmdb_app = cmdb_app.withColumn("Owning_Business", col("Owning_Business")[1])
 cmdb_app = cmdb_app.withColumn("Owning_Business", trim(col("Owning_Business")))
 
-display(cmdb_app)
-
 # COMMAND ----------
 
 cmdb_service = spark.read \
@@ -102,8 +100,6 @@ cmdb_service = cmdb_service.withColumnRenamed('dv_change_control','Approval_Grou
 cmdb_service = cmdb_service.withColumnRenamed('dv_support_group','Support_Group')
 cmdb_service = cmdb_service.withColumnRenamed('sys_id','ap_service_sys_id')
 
-display(cmdb_service)
-
 # COMMAND ----------
 
 #ORF_onboarded
@@ -112,7 +108,6 @@ ORF_ONBOARDED_Path = 'abfss://shell01eunadls2dobdchjqb@shell01eunadls2dobdchjqb.
 
 ORF_ONBOARDED = spark.read.format("parquet").option("header", "true").option("multiLine", "true").load(ORF_ONBOARDED_Path).select("Business_Application","Deployment_ID","Current_Stage")
 ORF_ONBOARDED = ORF_ONBOARDED.withColumn("Current_Stage", trim(upper(col("Current_Stage"))))
-display(ORF_ONBOARDED)
 
 # COMMAND ----------
 
@@ -124,8 +119,6 @@ onboarded_intermediate = ORF_ONBOARDED.join(cmdb_app, ORF_ONBOARDED['Business_Ap
 
 onboarded_intermediate = onboarded_intermediate.drop('Business_Application_Number')
 onboarded_intermediate = onboarded_intermediate.withColumnRenamed('Business_Application','Business_Application_Number')
-
-display(onboarded_intermediate)
 
 # COMMAND ----------
 
@@ -142,4 +135,3 @@ onboarded_list = onboarded_list['Business_Application_Number','Deployment_Number
 
 onboarded_list = onboarded_list.dropDuplicates()
 onboarded_list = onboarded_list.na.fill("")
-display(onboarded_list)
