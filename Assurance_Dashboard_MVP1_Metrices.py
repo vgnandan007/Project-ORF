@@ -3,4 +3,8 @@
 
 # COMMAND ----------
 
+display(onboarded_list)
+
+# COMMAND ----------
+
 
